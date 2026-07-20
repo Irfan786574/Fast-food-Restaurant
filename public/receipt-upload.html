@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Payment Receipt - HR Fastfood</title>
+  <link rel="stylesheet" href="./css/receipt-upload.css">
+</head>
+<body>
+  <header>
+    <h1>Thank You for Your Order!</h1>
+    <p class="subtitle">One last step: Upload your payment receipt to confirm your order.</p>
+  </header>
+
+  <section class="upload-section">
+    <div class="upload-card">
+      <img src="../images/receipt-icon.png" alt="Receipt Icon" class="receipt-icon">
+      <form id="receiptForm" enctype="multipart/form-data">
+        <label for="receiptFile">Choose your payment receipt (PDF, JPG, PNG):</label>
+        <input type="file" id="receiptFile" name="receiptFile" accept=".pdf,.jpg,.jpeg,.png" required>
+        <button type="submit" class="upload-btn">Upload Receipt</button>
+      </form>
+      <div id="uploadStatus"></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('orderId');
+
+    document.getElementById('receiptForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const receiptFile = document.getElementById('receiptFile').files[0];
+      const uploadStatus = document.getElementById('uploadStatus');
+
+      if (!receiptFile) {
+        uploadStatus.textContent = 'Please select a file to upload.';
+        uploadStatus.className = 'error';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('receiptFile', receiptFile);
+      if (orderId) {
+        formData.append('orderId', orderId);
+      }
+
+      fetch('http://localhost:5000/upload-receipt', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          uploadStatus.textContent = 'Receipt uploaded successfully! Your order is now confirmed.';
+          uploadStatus.className = 'success';
+          setTimeout(() => {
+            window.location.href = orderId ? 'order-success.html?orderId=' + encodeURIComponent(orderId) : 'order-success.html';
+          }, 2000);
+        } else {
+          uploadStatus.textContent = data.message || 'Error uploading receipt. Please try again.';
+          uploadStatus.className = 'error';
+        }
+      })
+      .catch(error => {
+        uploadStatus.textContent = 'Error occurred. Please try again.';
+        uploadStatus.className = 'error';
+      });
+    });
+  </script>
+</body>
+</html>

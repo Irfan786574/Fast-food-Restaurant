@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu - HR Fastfood</title>
+  <link rel="stylesheet" href="./css/menu.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to HR Fastfood</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login to Order</a></li>
+        <li id="ordersNav" style="display:none"><a href="order.html">My Orders</a></li>
+        <li id="adminNav" style="display:none"><a href="admin.html">Admin</a></li>
+        <li><button id="logoutBtn" style="display:none">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="menu-container">
+    <h2>Our Menu</h2>
+    <p class="menu-note">All items are loaded live from the database. Admin updates appear here automatically.</p>
+    <div id="menu-items" class="menu-items">
+      <p class="loading">Loading menu...</p>
+    </div>
+    <p class="order-cta"><a href="login.html" class="btn-order">Login to place an order</a></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script src="./js/api.js"></script>
+  <script>
+    const token = getToken();
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+    if (token) {
+      document.getElementById('logoutBtn').style.display = 'inline-block';
+      document.getElementById('ordersNav').style.display = 'inline';
+      document.querySelector('.order-cta').innerHTML =
+        '<a href="main-after-login.html" class="btn-order">Go to ordering page</a>';
+    }
+    if (isAdmin) {
+      document.getElementById('adminNav').style.display = 'inline';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('role');
+      window.location.href = 'index.html';
+    });
+
+    window.onload = async function() {
+      const container = document.getElementById('menu-items');
+      try {
+        const items = await fetch('http://localhost:5000/menu');
+        const data = await items.json();
+        container.innerHTML = '';
+        if (data.length === 0) {
+          container.innerHTML = '<p>No items available right now.</p>';
+          return;
+        }
+        data.forEach(item => container.appendChild(renderMenuCard(item)));
+      } catch (error) {
+        console.error('Error fetching menu:', error);
+        container.innerHTML = '<p>Error loading menu. Is the backend running on port 5000?</p>';
+      }
+    };
+  </script>
+</body>
+</html>

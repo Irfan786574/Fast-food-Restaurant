@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Fastfood - Menu</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>HR FASTFOOD</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="login.html">Login</a></li> <!-- Added Login link -->
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Fresh, Fast, and Delicious!</h2>
+            <p>Order your favorite fast food online now and enjoy the taste!</p>
+            <a href="menu.html" class="btn-primary">View Menu</a>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu">
+        <h2>Our Menu</h2>
+        <div id="menu-items" class="menu-items">
+            <p class="loading">Loading menu from database...</p>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+    </footer>
+
+    <script src="./js/api.js"></script>
+    <script>
+        window.onload = async function() {
+            const container = document.getElementById('menu-items');
+            try {
+                const items = await fetchMenu();
+                container.innerHTML = '';
+                if (items.length === 0) {
+                    container.innerHTML = '<p>No items available right now. Check back soon!</p>';
+                    return;
+                }
+                items.forEach(item => container.appendChild(renderMenuCard(item)));
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<p>Could not load menu. Make sure the backend is running.</p>';
+            }
+        };
+    </script>
+</body>
+</html>

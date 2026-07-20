@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup - HR Fastfood</title>
+  <link rel="stylesheet" href="./css/signup.css">
+</head>
+<body>
+  <header>
+    <h1>Signup - HR Fastfood</h1>
+  </header>
+
+  <section class="signup">
+    <form id="signupForm">
+      <input type="text" id="name" placeholder="Name" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Sign Up</button>
+    </form>
+    <p id="signupErrorMessage" class="error"></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Simulate sending a verification code after user signup
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Simulate sending sign-up request to backend
+      fetch('http://localhost:5000/signup', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name, email, password })
+})
+.then(async (response) => {
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.message || 'Signup failed');
+  }
+  window.location.href = 'verify.html';
+})
+.catch((error) => {
+  console.error('Error during signup:', error);
+  document.getElementById('signupErrorMessage').textContent =
+    error.message || 'Error during signup, please try again.';
+});
+    });
+  </script>
+</body>
+</html>

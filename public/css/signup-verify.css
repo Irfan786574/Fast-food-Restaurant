@@ -1,0 +1,103 @@
+/* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 36px;
+  color: #d35400;
+}
+
+/* Signup Section */
+.signup {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.signup input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.signup button {
+  width: 100%;
+  padding: 12px;
+  background-color: #d35400;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.signup button:hover {
+  background-color: #e67e22;
+}
+
+/* Error Message */
+.error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 40px;
+}
+/* footer p {
+  font-size: 14px;
+  color: #777;
+}
+/* Responsive Styles 
+@media (max-width: 600px) {
+  .signup {
+    width: 90%;
+  }
+
+  header h1 {
+    font-size: 28px;
+  }
+
+  .signup input,
+  .signup button {
+    font-size: 16px;
+  }
+}           
+/* Additional styles for verification page 
+.verify {   
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+.verify input {
+    width: 100%;    
+     */

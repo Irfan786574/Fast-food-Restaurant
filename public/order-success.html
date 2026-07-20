@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Successful - HR Fastfood</title>
+  <link rel="stylesheet" href="css/main-after-login.css">
+  <style>
+    .success-container {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .order-id {
+      display: inline-block;
+      margin: 20px 0;
+      padding: 12px 24px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .actions a {
+      text-decoration: none;
+      background-color: #e67e22;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+    }
+
+    .actions a.secondary {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>HR Fastfood</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="main-after-login.html">Menu</a></li>
+        <li><button id="logoutBtn">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="success-container">
+    <div class="success-icon">✅</div>
+    <h2>Order Placed Successfully!</h2>
+    <p>Thank you for your order. We are preparing your food.</p>
+    <div class="order-id">
+      Order ID: <strong id="orderIdDisplay">—</strong>
+    </div>
+    <div class="actions">
+      <a href="main-after-login.html">Order More</a>
+      <a href="receipt-upload.html" id="uploadReceiptBtn" class="secondary">Upload Receipt</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('cart');
+      localStorage.removeItem('orderDetails');
+      window.location.href = 'index.html';
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('orderId');
+    if (orderId) {
+      document.getElementById('orderIdDisplay').textContent = orderId;
+      const uploadBtn = document.getElementById('uploadReceiptBtn');
+      if (uploadBtn) {
+        uploadBtn.href = 'receipt-upload.html?orderId=' + encodeURIComponent(orderId);
+      }
+    }
+  </script>
+</body>
+</html>

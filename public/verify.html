@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2FA Verification - HR Fastfood</title>
+  <link rel="stylesheet" href="./css/verify.css">
+</head>
+<body>
+  <header>
+    <h1>2FA Verification - HR Fastfood</h1>
+  </header>
+
+  <section class="verify">
+    <form id="verifyForm">
+      <input type="text" id="verificationCode" placeholder="Enter Verification Code" required>
+      <button type="submit">Verify</button>
+    </form>
+    <p id="verifyErrorMessage" class="error"></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Simulate verifying the 2FA code
+    document.getElementById('verifyForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const verificationCode = document.getElementById('verificationCode').value;
+
+      // Simulate backend verification of the code
+      if (verificationCode === '123456') { // You can replace this with real backend verification
+        // Redirect to the menu page after successful verification
+        window.location.href = 'menu.html';
+      } else {
+        document.getElementById('verifyErrorMessage').textContent = 'Invalid code, please try again.';
+      }
+    });
+  </script>
+</body>
+</html>

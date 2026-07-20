@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page - HR Fastfood</title>
+  <link rel="stylesheet" href="./css/main-after-login.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to HR Fastfood</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="order.html">My Orders</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><button id="logoutBtn">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="menu-container">
+    <h2>Our Menu</h2>
+    <div id="menu-items" class="menu-items">
+      <!-- Menu items will be dynamically populated here -->
+    </div>
+  </section>
+
+  <section class="order-summary">
+    <h2>Order Summary</h2>
+    <div id="order-summary-list">
+      <!-- Order summary items will be dynamically populated here -->
+    </div>
+    <div id="total-price">
+      <!-- Total price will be dynamically calculated here -->
+    </div>
+    <button id="place-order-btn">Place Order</button>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script src="./js/api.js"></script>
+  <script>
+// Handle logout functionality
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  localStorage.removeItem('token'); // Remove the token
+  window.location.href = 'index.html'; // Redirect to the home page
+});
+
+// Array to store the fetched menu items
+let menuItemsArray = [];
+
+// Fetch the menu items from the backend
+window.onload = function() {
+  if (!getToken()) {
+    window.location.href = 'login.html';
+    return;
+  }
+  localStorage.removeItem('orderDetails');
+  localStorage.removeItem('cart');
+  fetchMenuItems();
+  displayCart();
+};
+// Function to fetch the menu items from the backend
+// Fetch the menu items from the backend
+function fetchMenuItems() {
+  fetch('http://localhost:5000/menu', { method: 'GET' })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch menu items. Status: ' + response.status);
+    }
+    return response.json();
+  })
+  .then(data => {
+    menuItemsArray = data;
+    displayMenuItems();
+  })
+  .catch(error => {
+    console.error('Error fetching menu items:', error);
+    alert('Error fetching menu items. Please try again later.');
+  });
+}
+
+
+// Function to render the menu items dynamically
+function displayMenuItems() {
+  const menuItemsContainer = document.getElementById('menu-items');
+  menuItemsContainer.innerHTML = ''; // Clear the container before re-rendering
+
+  // Loop through the array and display each item
+  menuItemsArray.forEach(item => {
+    const available = isItemAvailable(item);
+    const maxStock = item.stock != null ? item.stock : 999;
+    const menuItemDiv = document.createElement('div');
+    menuItemDiv.classList.add('menu-item');
+    if (!available) menuItemDiv.classList.add('unavailable');
+    menuItemDiv.setAttribute('data-id', item.id);
+    menuItemDiv.innerHTML = `
+      <img src="${item.image_url || './images/logos/burger_logo.jpg'}" alt="${item.name}">
+      <h3>${item.name}</h3>
+      <p>Price: PKR ${item.price}</p>
+      ${item.discount ? `<p>Discount: ${item.discount}% OFF</p>` : ''}
+      <p class="stock">${available ? 'Available: ' + maxStock : 'Out of stock'}</p>
+      <div class="quantity-control">
+        <button class="decrease" data-id="${item.id}" ${!available ? 'disabled' : ''}>-</button>
+        <input type="number" id="quantity-${item.id}" value="0" min="0" max="${maxStock}" ${!available ? 'disabled' : ''} />
+        <button class="increase" data-id="${item.id}" ${!available ? 'disabled' : ''}>+</button>
+      </div>
+    `;
+    menuItemsContainer.appendChild(menuItemDiv);
+
+    // Event listeners for "+" and "-" buttons
+    document.querySelector(`.increase[data-id="${item.id}"]`).addEventListener('click', function() {
+      updateQuantity(item.id, 1);
+    });
+    document.querySelector(`.decrease[data-id="${item.id}"]`).addEventListener('click', function() {
+      updateQuantity(item.id, -1);
+    });
+
+    // Set the initial quantity (from localStorage or default 0)
+    const cart = JSON.parse(localStorage.getItem('cart')) || {};
+    const quantityInput = document.getElementById(`quantity-${item.id}`);
+    quantityInput.value = cart[item.id] || 0; // Set to 0 if no quantity is saved
+  });
+}
+
+// Function to update quantity of an item
+function updateQuantity(itemId, change) {
+  const quantityInput = document.getElementById(`quantity-${itemId}`);
+  const item = menuItemsArray.find(i => i.id == itemId);
+  const maxStock = item && item.stock != null ? item.stock : 999;
+  let quantity = parseInt(quantityInput.value) || 0;
+  quantity += change;
+
+  if (quantity < 0) quantity = 0;
+  if (quantity > maxStock) {
+    quantity = maxStock;
+    alert(`Only ${maxStock} available for ${item.name}`);
+  }
+  quantityInput.value = quantity;
+
+  // Update the cart array (localStorage can be used to persist)
+  let cart = JSON.parse(localStorage.getItem('cart')) || {};
+  if (quantity > 0) {
+    cart[itemId] = quantity; // Update or add item to cart
+  } else {
+    delete cart[itemId]; // Remove item if quantity is 0
+  }
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  // Update the order summary
+  displayCart();
+}
+
+// Function to display the cart and order summary
+function displayCart() {
+  const orderSummaryList = document.getElementById('order-summary-list');
+  const totalPriceElement = document.getElementById('total-price');
+  const cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+  orderSummaryList.innerHTML = ''; // Clear previous cart
+
+  let totalPrice = 0;
+
+  // Loop through the cart and display each item
+  for (let itemId in cart) {
+    const item = menuItemsArray.find(item => item.id == itemId);
+    const quantity = cart[itemId];
+    if (item && quantity > 0) {
+      const itemDiv = document.createElement('div');
+      itemDiv.classList.add('order-item');
+      itemDiv.innerHTML = `
+        <span>${item.name}</span>
+        <span>Qty: ${quantity}</span>
+        <span>Price: PKR ${item.price}</span>
+        <span>Total: PKR ${item.price * quantity}</span>
+      `;
+      orderSummaryList.appendChild(itemDiv);
+
+      // Update the total price
+      totalPrice += item.price * quantity;
+    }
+  }
+
+  // Display total price
+  totalPriceElement.innerHTML = `Total Price: PKR ${totalPrice}`;
+
+  // If no items, hide the "Place Order" button
+  if (Object.keys(cart).length === 0 || totalPrice === 0) {
+    document.getElementById('place-order-btn').style.display = 'none';
+  } else {
+    document.getElementById('place-order-btn').style.display = 'inline-block';
+  }
+}
+
+// Handle Place Order button functionality
+document.getElementById('place-order-btn').addEventListener('click', function() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || {};
+  
+  // Store the cart details in localStorage for the confirmation page
+  localStorage.setItem('orderDetails', JSON.stringify(cart));
+
+  // Redirect to the order confirmation page
+  window.location.href = 'order-confirmation.html'; 
+});
+
+
+// Function to reset the cart when page is loaded
+function resetCart() {
+  localStorage.removeItem('cart'); // Clear the cart when the page loads (reset to 0 for all items)
+}
+
+
+    console.log("Main page loaded successfully.");
+  </script>
+</body>
+</html>

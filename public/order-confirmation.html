@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation - HR Fastfood</title>
+  <link rel="stylesheet" href="css/main-after-login.css">
+  <style>
+    /* Add inline styles for order confirmation */
+    .order-summary-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .order-item:last-child {
+      border-bottom: none;
+    }
+    
+    #total-price {
+      font-size: 1.5em;
+      font-weight: bold;
+      text-align: right;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 5px;
+    }
+    
+    #confirm-order-btn, #cancel-order-btn {
+      padding: 12px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      cursor: pointer;
+    }
+    
+    #confirm-order-btn {
+      background: #28a745;
+      color: white;
+    }
+    
+    #confirm-order-btn:hover {
+      background: #218838;
+    }
+    
+    #cancel-order-btn {
+      background: #dc3545;
+      color: white;
+    }
+    
+    #cancel-order-btn:hover {
+      background: #c82333;
+    }
+    
+    .button-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Order Confirmation</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><button id="logoutBtn">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="order-summary-container">
+    <h2>Confirm Your Order</h2>
+    <div id="order-summary-list">
+      <!-- Order items will be dynamically populated here -->
+      <div class="loading">Loading order details...</div>
+    </div>
+    <div id="total-price">
+      <!-- Total price will be dynamically calculated here -->
+    </div>
+    <div class="button-container">
+      <button id="confirm-order-btn">Confirm Order</button>
+      <button id="cancel-order-btn">Cancel Order</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Global variables
+    let menuItemsArray = [];
+    let cart = {};
+
+    // Handle logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('cart'); // Also clear cart on logout
+      window.location.href = 'index.html';
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadOrderDetails();
+    });
+
+    // Load order details
+    async function loadOrderDetails() {
+      try {
+        // Get cart from localStorage
+        cart = JSON.parse(localStorage.getItem('cart')) || {};
+        
+        if (!cart || Object.keys(cart).length === 0) {
+          throw new Error('Cart is empty');
+        }
+
+        // Fetch menu items
+        const response = await fetch('http://localhost:5000/menu', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token') || ''
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch menu items');
+        }
+
+        const data = await response.json();
+        menuItemsArray = data.items || data; // Handle different API response formats
+
+        // Display order summary
+        displayOrderSummary();
+        
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('order-summary-list').innerHTML = 
+          `<div class="error">${error.message}. <a href="main-after-login.html">Return to menu</a></div>`;
+        
+        // Disable confirm button
+        document.getElementById('confirm-order-btn').disabled = true;
+      }
+    }
+
+    // Function to display order summary
+    function displayOrderSummary() {
+      const orderSummaryList = document.getElementById('order-summary-list');
+      const totalPriceElement = document.getElementById('total-price');
+      
+      if (!menuItemsArray.length) {
+        orderSummaryList.innerHTML = '<div class="error">No menu items loaded</div>';
+        return;
+      }
+
+      let totalPrice = 0;
+      let hasItems = false;
+      
+      orderSummaryList.innerHTML = '';
+
+      // Loop through cart and display each item
+      for (let itemId in cart) {
+        const item = menuItemsArray.find(item => item.id == itemId);
+        const quantity = parseInt(cart[itemId]);
+        
+        if (item && quantity > 0) {
+          hasItems = true;
+          const itemDiv = document.createElement('div');
+          itemDiv.classList.add('order-item');
+          itemDiv.innerHTML = `
+            <div>
+              <strong>${item.name}</strong><br>
+              <small>PKR ${item.price} each</small>
+            </div>
+            <div>Qty: ${quantity}</div>
+            <div><strong>PKR ${(item.price * quantity).toFixed(2)}</strong></div>
+          `;
+          orderSummaryList.appendChild(itemDiv);
+
+          // Update the total price
+          totalPrice += item.price * quantity;
+        }
+      }
+
+      if (!hasItems) {
+        orderSummaryList.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+        document.getElementById('confirm-order-btn').disabled = true;
+        return;
+      }
+
+      // Display total price
+      totalPriceElement.innerHTML = `
+        <h3>Total Price: PKR ${totalPrice.toFixed(2)}</h3>
+      `;
+    }
+
+    // Function to calculate total price
+    function calculateTotalPrice(itemsArray) {
+      let totalPrice = 0;
+      itemsArray.forEach(item => {
+        const menuItem = menuItemsArray.find(itemData => itemData.id === item.id);
+        if (menuItem) {
+          totalPrice += menuItem.price * item.quantity;
+        }
+      });
+      return totalPrice.toFixed(2);
+    }
+
+    // Handle Confirm Order button
+    document.getElementById('confirm-order-btn').addEventListener('click', async function() {
+      const btn = this;
+      const originalText = btn.textContent;
+      
+      // Disable button and show loading
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+      
+      // Get token
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please login to place an order');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Convert cart to array
+      const itemsArray = Object.entries(cart).map(([id, quantity]) => ({
+        id: parseInt(id),
+        quantity: parseInt(quantity)
+      }));
+
+      // Check if cart is empty
+      if (itemsArray.length === 0) {
+        alert('Your cart is empty!');
+        btn.disabled = false;
+        btn.textContent = originalText;
+        return;
+      }
+
+      try {
+        // Send order to backend
+        const response = await fetch('http://localhost:5000/place-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            items: itemsArray,
+            totalPrice: calculateTotalPrice(itemsArray)
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          localStorage.removeItem('cart');
+          localStorage.removeItem('orderDetails');
+          window.location.href = 'order-success.html?orderId=' + encodeURIComponent(data.orderId);
+          
+        } else {
+          throw new Error(data.message || 'Order failed');
+        }
+        
+      } catch (error) {
+        console.error('Error placing order:', error);
+        alert(`Error: ${error.message}`);
+        
+        // Re-enable button
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+
+    // Handle Cancel Order
+    document.getElementById('cancel-order-btn').addEventListener('click', function() {
+      if (confirm('Are you sure you want to cancel this order?')) {
+        localStorage.removeItem('cart');
+        localStorage.removeItem('orderDetails');
+        window.location.href = 'main-after-login.html';
+      }
+    });
+  </script>
+</body>
+</html>

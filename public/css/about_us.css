@@ -1,0 +1,126 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #fff8e1; /* Light yellow background for a warm food-related tone */
+    color: #333;
+    padding: 20px;
+}
+
+/* Header Section */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 40px;
+    font-weight: bold;
+    color: #d35400; /* Orange for warmth and energy */
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 20px; /* Increase font size for better visibility */
+    color: #34495e; /* Darker gray for better contrast */
+    font-weight: 500; /* Semi-bold for better readability */
+    line-height: 1.5; /* Improve line spacing */
+    max-width: 80%; /* Limit width for better alignment */
+    margin: 0 auto; /* Center the text */
+    text-align: center; /* Ensure the text is centered */
+    padding: 0 20px; /* Add some padding for better spacing */
+}
+
+/* Section Styles */
+section {
+    margin-bottom: 40px;
+}
+
+h2 {
+    font-size: 30px;
+    color: #e67e22; /* Orange-yellow tone to represent energy */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+p {
+    font-size: 18px;
+    color: #7f8c8d;
+    text-align: justify;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+/* Container for content */
+.content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Join Us Section */
+.join-us {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.join-us h2 {
+    color: #27ae60; /* Green to inspire joining */
+}
+
+.join-us p {
+    color: #34495e;
+}
+
+.join-us a {
+    color: #2980b9; /* Blue for links to match professional tone */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.join-us a:hover {
+    text-decoration: underline;
+}
+
+/* Styling for individual sections */
+section h2 {
+    font-size: 30px;
+    color: #e67e22;
+}
+
+section p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #7f8c8d;
+}
+
+/* Add responsive font size for mobile view */
+@media (max-width: 768px) {
+    header p {
+        font-size: 18px; /* Adjust font size for smaller screens */
+        max-width: 90%; /* More space on smaller screens */
+    }
+
+    .content {
+        padding: 0 15px; /* Padding for smaller screens */
+    }
+}

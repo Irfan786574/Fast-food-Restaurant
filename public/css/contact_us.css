@@ -1,0 +1,184 @@
+/* General Styles for Contact Us Page */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+/* Header Styles */
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+nav {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav .logo h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+}
+
+/* Contact Section Styles */
+.contact {
+    background-color: #ff6347;
+    color: white;
+    padding: 50px 0;
+    text-align: center;
+}
+
+.contact h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.contact p {
+    font-size: 18px;
+    margin-bottom: 40px;
+}
+
+/* Contact Info Section */
+.contact-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.contact-item {
+    background-color: #fff;
+    color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+}
+
+.contact-item h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.contact-item p {
+    font-size: 18px;
+}
+
+/* Contact Form Styles */
+.contact-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.contact-form h3 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.contact-form button {
+    background-color: #ff6347;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.contact-form button:hover {
+    background-color: #ff4500;
+}
+
+/* Social Media Section Styles */
+.social-media {
+    margin-top: 30px;
+}
+
+.social-media a {
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.social-media a:hover {
+    background-color: #ff6347;
+}
+
+/* Styling the Social Logos */
+.social-logo {
+    width: 50px; /* Adjust the size of the logo */
+    height: auto;
+    margin: 10px;
+    transition: transform 0.3s ease-in-out;
+    background-color: transparent; /* Ensures no background is visible */
+    display: inline-block; /* Keeps images inline */
+    border: none; /* Removes any border if accidentally applied */
+    padding: 0; /* Removes any padding */
+}
+
+.social-logo:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+/* Google Map Styles */
+.google-map {
+    margin-top: 40px;
+    width: 100%;
+    text-align: center;
+}
+
+.google-map iframe {
+    border: 0;
+    width: 100%;
+    height: 450px;
+    border-radius: 10px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+}

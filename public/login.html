@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - HR Fastfood</title>
+  <link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+  <header>
+    <h1>Login - HR Fastfood</h1>
+  </header>
+
+  <section class="login">
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required>
+      
+      <!-- Password Field -->
+      <div class="password-container">
+        <input type="password" id="password" placeholder="Password" required>
+        <span id="passwordToggle" class="password-toggle">👁️</span> <!-- Toggle icon -->
+      </div>
+      
+      <button type="submit">Login</button>
+    </form>
+    <p id="errorMessage" class="error"></p>
+    <p>New customer? <a href="signup.html">Sign up here</a></p> <!-- Signup link -->
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Login functionality
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Send login credentials to the backend
+      fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('role', data.role || 'customer');
+          localStorage.setItem('isAdmin', data.isAdmin ? 'true' : 'false');
+          if (data.isAdmin) {
+            window.location.href = 'admin.html';
+          } else {
+            window.location.href = 'main-after-login.html';
+          }
+        } else {
+          document.getElementById('errorMessage').textContent = 'Invalid credentials. Please try again.';
+        }
+      })
+      .catch(error => {
+        console.error('Error during login:', error);
+        document.getElementById('errorMessage').textContent = 'Error during login, please try again.';
+      });
+    });
+
+    // Toggle password visibility
+    document.getElementById('passwordToggle').addEventListener('click', function() {
+      const passwordField = document.getElementById('password');
+      const type = passwordField.type === 'password' ? 'text' : 'password';
+      passwordField.type = type;
+      this.textContent = type === 'password' ? '👁️' : '🙈'; // Toggle icon
+    });
+  </script>
+</body>
+</html>

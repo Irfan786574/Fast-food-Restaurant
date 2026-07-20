@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders - HR Fastfood</title>
+  <link rel="stylesheet" href="./css/order.css">
+</head>
+<body>
+  <header>
+    <h1>My Orders - HR Fastfood</h1>
+    <nav>
+      <ul>
+        <li><a href="main-after-login.html">Menu</a></li>
+        <li><a href="order.html">My Orders</a></li>
+        <li><button id="logoutBtn">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="order">
+    <h2>Order History</h2>
+    <p class="order-note">All orders are loaded from your account in the database.</p>
+    <div id="orderSummary">
+      <p class="loading">Loading orders...</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
+  </footer>
+
+  <script src="./js/api.js"></script>
+  <script>
+    if (!getToken()) {
+      alert('Please log in first.');
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('role');
+      window.location.href = 'index.html';
+    });
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      return new Date(dateStr).toLocaleString();
+    }
+
+    async function loadOrders() {
+      const container = document.getElementById('orderSummary');
+      try {
+        const orders = await fetchMyOrders();
+        if (orders.length === 0) {
+          container.innerHTML = '<p>You have no orders yet. <a href="main-after-login.html">Place your first order</a></p>';
+          return;
+        }
+
+        container.innerHTML = orders.map(order => `
+          <div class="order-card">
+            <div class="order-header">
+              <strong>Order #${order.id}</strong>
+              <span class="status status-${order.status}">${order.status}</span>
+            </div>
+            <p class="order-date">${formatDate(order.created_at)}</p>
+            <ul class="order-items">
+              ${(order.items || []).map(i => `
+                <li>${i.name} × ${i.quantity} — ${formatPrice(i.line_total)}</li>
+              `).join('') || '<li>No line items recorded</li>'}
+            </ul>
+            <p class="order-total"><strong>Total: ${formatPrice(order.total_price)}</strong></p>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = '<p>Could not load orders. Please log in again.</p>';
+      }
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>

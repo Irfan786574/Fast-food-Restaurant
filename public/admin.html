@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Menu Management</title>
+  <link rel="stylesheet" href="./css/admin.css">
+</head>
+<body>
+  <header>
+    <h1>Admin — Menu Management</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">View Site</a></li>
+        <li><a href="menu.html">Public Menu</a></li>
+        <li><button id="logoutBtn">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div id="message"></div>
+
+  <section class="panel">
+    <h2>Add New Item</h2>
+    <form id="addForm">
+      <div class="form-grid">
+        <label>Name<input type="text" id="addName" required></label>
+        <label>Price (PKR)<input type="number" id="addPrice" min="0" step="1" required></label>
+        <label>Discount %<input type="number" id="addDiscount" min="0" max="100" value="0"></label>
+        <label>Stock<input type="number" id="addStock" min="0" value="100"></label>
+        <label>Image URL<input type="text" id="addImage" placeholder="./images/logos/burger_logo.jpg"></label>
+        <label>Available
+          <select id="addAvailable">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </label>
+      </div>
+      <button type="submit">Add Item</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>All Menu Items (from database)</h2>
+    <p>Changes here update what customers see on Home, Menu, and Order pages.</p>
+    <div id="menuTableWrap">
+      <p>Loading...</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 HR Fastfood. Admin panel.</p>
+  </footer>
+
+  <script src="./js/api.js"></script>
+  <script>
+    const API = 'http://localhost:5000';
+
+    if (!getToken() || localStorage.getItem('isAdmin') !== 'true') {
+      alert('Admin login required.');
+      window.location.href = 'login.html';
+    }
+
+    function showMessage(text, type) {
+      const el = document.getElementById('message');
+      el.className = 'message ' + type;
+      el.textContent = text;
+      setTimeout(() => { el.textContent = ''; el.className = ''; }, 4000);
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    });
+
+    async function loadMenu() {
+      const wrap = document.getElementById('menuTableWrap');
+      try {
+        const items = await fetchAdminMenu();
+        if (items.length === 0) {
+          wrap.innerHTML = '<p>No items in database. Add one above.</p>';
+          return;
+        }
+
+        wrap.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map(item => `
+                <tr class="${item.is_available == 0 ? 'unavailable' : ''}" data-id="${item.id}" data-image="${escapeHtml(item.image_url || '')}">
+                  <td>${item.id}</td>
+                  <td><input type="text" class="edit-name" value="${escapeHtml(item.name)}"></td>
+                  <td><input type="number" class="edit-price" value="${item.price}" min="0" style="width:80px"></td>
+                  <td><input type="number" class="edit-discount" value="${item.discount || 0}" min="0" max="100" style="width:60px"></td>
+                  <td><input type="number" class="edit-stock" value="${item.stock ?? 100}" min="0" style="width:70px"></td>
+                  <td>
+                    <span class="status-badge ${item.is_available != 0 ? 'on' : 'off'}">
+                      ${item.is_available != 0 ? 'Available' : 'Hidden'}
+                    </span>
+                  </td>
+                  <td class="actions-cell">
+                    <button class="small secondary save-btn">Save</button>
+                    <button class="small toggle-btn">${item.is_available != 0 ? 'Hide' : 'Show'}</button>
+                    <button class="small danger delete-btn">Delete</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        wrap.querySelectorAll('tr[data-id]').forEach(row => {
+          const id = row.dataset.id;
+
+          row.querySelector('.save-btn').addEventListener('click', () => saveItem(id, row));
+          row.querySelector('.toggle-btn').addEventListener('click', () => toggleItem(id, row));
+          row.querySelector('.delete-btn').addEventListener('click', () => deleteItem(id));
+        });
+      } catch (err) {
+        wrap.innerHTML = '<p>Failed to load menu. Check admin access and backend.</p>';
+        console.error(err);
+      }
+    }
+
+    function escapeHtml(text) {
+      const d = document.createElement('div');
+      d.textContent = text;
+      return d.innerHTML;
+    }
+
+    async function saveItem(id, row) {
+      const body = {
+        name: row.querySelector('.edit-name').value,
+        price: parseFloat(row.querySelector('.edit-price').value),
+        discount: parseInt(row.querySelector('.edit-discount').value) || 0,
+        stock: parseInt(row.querySelector('.edit-stock').value) || 0,
+        image_url: row.dataset.image || '',
+        is_available: row.classList.contains('unavailable') ? 0 : 1,
+      };
+
+      const res = await fetch(API + '/admin/menu/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showMessage('Item updated', 'success');
+        loadMenu();
+      } else {
+        showMessage(data.message || 'Update failed', 'error');
+      }
+    }
+
+    async function toggleItem(id, row) {
+      const isHidden = row.classList.contains('unavailable');
+      const body = {
+        name: row.querySelector('.edit-name').value,
+        price: parseFloat(row.querySelector('.edit-price').value),
+        discount: parseInt(row.querySelector('.edit-discount').value) || 0,
+        stock: parseInt(row.querySelector('.edit-stock').value) || 0,
+        image_url: row.dataset.image || '',
+        is_available: isHidden ? 1 : 0,
+      };
+
+      const res = await fetch(API + '/admin/menu/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        showMessage(isHidden ? 'Item is now visible' : 'Item hidden from menu', 'success');
+        loadMenu();
+      }
+    }
+
+    async function deleteItem(id) {
+      if (!confirm('Delete this item permanently?')) return;
+      const res = await fetch(API + '/admin/menu/' + id, {
+        method: 'DELETE',
+        headers: authHeaders(),
+      });
+      if (res.ok) {
+        showMessage('Item deleted', 'success');
+        loadMenu();
+      }
+    }
+
+    document.getElementById('addForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const body = {
+        name: document.getElementById('addName').value,
+        price: parseFloat(document.getElementById('addPrice').value),
+        discount: parseInt(document.getElementById('addDiscount').value) || 0,
+        stock: parseInt(document.getElementById('addStock').value) || 0,
+        image_url: document.getElementById('addImage').value,
+        is_available: document.getElementById('addAvailable').value === '1',
+      };
+
+      const res = await fetch(API + '/admin/menu', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showMessage('Item added', 'success');
+        e.target.reset();
+        document.getElementById('addStock').value = 100;
+        loadMenu();
+      } else {
+        showMessage(data.message || 'Failed to add item', 'error');
+      }
+    });
+
+    loadMenu();
+  </script>
+</body>
+</html>
