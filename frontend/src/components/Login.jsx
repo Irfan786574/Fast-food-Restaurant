@@ -19,7 +19,11 @@ const Login = () => {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         console.log('JWT Token stored in localStorage:', response.data.token);
-        navigate('/orders');
+        if (response.data.isAdmin) {
+          navigate('/orders');
+        } else {
+          navigate('/menu');
+        }
       } else {
         setError('Invalid credentials');
       }

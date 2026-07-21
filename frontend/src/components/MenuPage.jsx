@@ -7,12 +7,17 @@ const saveCart = (cart) => localStorage.setItem('cart', JSON.stringify(cart));
 
 const MenuPage = () => {
   const [menuItems, setMenuItems] = useState([]);
-  const [cart, setCart] = useState(getCart());
+  const [cart, setCart] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Clear details as per original window.onload
+    localStorage.removeItem('orderDetails');
+    localStorage.removeItem('cart');
+    setCart({});
+    
     const fetchMenu = async () => {
       setLoading(true);
       try {
@@ -68,16 +73,23 @@ const MenuPage = () => {
     navigate('/order-confirmation');
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('cart');
+    navigate('/');
+  };
+
   return (
     <div className="menu-page-wrapper">
-      <header className="orig-header">
-        <nav className="orig-nav">
-          <div className="logo"><h1>HR FASTFOOD</h1></div>
-          <ul className="nav-links">
+      <header>
+        <h1>Welcome to HR Fastfood</h1>
+        <nav>
+          <ul>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/menu" className="panel-highlight">Menu</Link></li>
+            <li><Link to="/menu">Menu</Link></li>
             <li><Link to="/orders">My Orders</Link></li>
             <li><Link to="/about">About</Link></li>
+            <li><button id="logoutBtn" onClick={handleLogout}>Logout</button></li>
           </ul>
         </nav>
       </header>
@@ -100,7 +112,7 @@ const MenuPage = () => {
                 <img
                   src={item.image_url || '/images/logos/burger_logo.jpg'}
                   alt={item.name}
-                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400'; }}
+                  onError={(e) => { e.target.src = '/images/logos/burger_logo.jpg'; }}
                 />
                 <h3>{item.name}</h3>
                 <p>Price: PKR {item.price}</p>
@@ -141,7 +153,7 @@ const MenuPage = () => {
         )}
       </section>
 
-      <footer className="orig-footer">
+      <footer>
         <p>&copy; 2025 HR Fastfood. All rights reserved.</p>
       </footer>
     </div>

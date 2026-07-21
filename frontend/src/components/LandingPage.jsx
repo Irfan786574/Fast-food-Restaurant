@@ -115,7 +115,7 @@ const LandingPage = () => {
                 src={item.image_url || '/images/logos/burger_logo.jpg'} 
                 alt={item.name} 
                 onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400'; // high-quality fallback image
+                  e.target.src = '/images/logos/burger_logo.jpg';
                 }}
               />
               <h3>{item.name}</h3>

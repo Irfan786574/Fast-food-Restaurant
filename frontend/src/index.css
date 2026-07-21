@@ -1391,6 +1391,52 @@ tr:hover {
 }
 
 /* ===== Menu Page ===== */
+.menu-page-wrapper {
+  background-color: #f4f6f9;
+  color: #333;
+  min-height: 100vh;
+}
+.menu-page-wrapper header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.menu-page-wrapper header h1 {
+  font-size: 36px;
+  color: #d35400;
+}
+.menu-page-wrapper nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.menu-page-wrapper nav ul li {
+  display: inline;
+}
+.menu-page-wrapper nav a {
+  text-decoration: none;
+  color: #2980b9;
+  font-size: 18px;
+}
+.menu-page-wrapper nav a:hover {
+  text-decoration: underline;
+}
+.menu-page-wrapper button {
+  background-color: #e67e22;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.menu-page-wrapper button:hover {
+  background-color: #d35400;
+}
 .menu-page-wrapper .menu-container {
   max-width: 1200px;
   margin: 30px auto;
@@ -1399,9 +1445,15 @@ tr:hover {
   border-radius: 12px;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
+.menu-page-wrapper h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+}
 .menu-page-wrapper .menu-items {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   gap: 20px;
 }
 .menu-page-wrapper .menu-item {
@@ -1413,44 +1465,75 @@ tr:hover {
   text-align: center;
   transition: transform 0.3s ease;
 }
-.menu-page-wrapper .menu-item:hover { transform: scale(1.05); }
-.menu-page-wrapper .menu-item.unavailable { opacity: 0.5; }
-.menu-page-wrapper .menu-item img { width: 100%; height: auto; border-radius: 8px; }
+.menu-page-wrapper .menu-item:hover {
+  transform: scale(1.05);
+}
+.menu-page-wrapper .menu-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.menu-page-wrapper .menu-item h3 {
+  font-size: 22px;
+  color: #333;
+  margin-top: 10px;
+}
+.menu-page-wrapper .menu-item p {
+  margin-top: 10px;
+  font-size: 18px;
+}
 .menu-page-wrapper .quantity-control {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
   gap: 8px;
-  margin-top: 15px;
 }
 .menu-page-wrapper .quantity-control button {
-  padding: 8px 14px;
+  padding: 10px 15px;
   background-color: #2980b9;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+}
+.menu-page-wrapper .quantity-control button:hover {
+  background-color: #3498db;
 }
 .menu-page-wrapper .quantity-control input {
   width: 50px;
-  padding: 8px;
+  padding: 10px;
+  font-size: 16px;
   text-align: center;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
 .menu-page-wrapper .order-summary {
-  max-width: 1200px;
-  margin: 50px auto;
+  margin-top: 50px;
   background-color: #fff;
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 50px auto;
+}
+.menu-page-wrapper .order-summary h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+}
+.menu-page-wrapper #order-summary-list {
+  margin-bottom: 20px;
 }
 .menu-page-wrapper .order-item {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
+}
+.menu-page-wrapper .order-item span {
+  font-size: 18px;
 }
 .menu-page-wrapper #total-price {
   font-size: 22px;
@@ -1468,7 +1551,39 @@ tr:hover {
   font-size: 18px;
   width: 100%;
 }
-.menu-page-wrapper #place-order-btn:hover { background-color: #2ecc71; }
+.menu-page-wrapper #place-order-btn:hover {
+  background-color: #2ecc71;
+}
+.menu-page-wrapper footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 14px;
+  color: #888;
+}
+@media (max-width: 768px) {
+  .menu-page-wrapper .menu-item {
+    width: 45%;
+  }
+  .menu-page-wrapper .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .menu-page-wrapper #place-order-btn {
+    width: auto;
+  }
+}
+@media (max-width: 480px) {
+  .menu-page-wrapper .menu-item {
+    width: 100%;
+  }
+  .menu-page-wrapper .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .menu-page-wrapper #place-order-btn {
+    width: 100%;
+  }
+}
 
 /* ===== Order Confirmation Page ===== */
 .order-confirm-wrapper .order-summary-container {
