@@ -66,7 +66,9 @@ const LandingPage = () => {
           </div>
           <ul className="nav-links">
             <li><Link to="/">Home</Link></li>
-            <li><a href="#menu" onClick={handleScrollToMenu}>Menu</a></li>
+            <li><Link to="/menu">Menu</Link></li>
+            <li><Link to="/about">About</Link></li>
+            {!loggedIn && <li><Link to="/signup">Signup</Link></li>}
             
             {/* Dynamic links based on login and role */}
             {loggedIn ? (

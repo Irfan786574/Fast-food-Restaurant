@@ -1390,3 +1390,276 @@ tr:hover {
   background: rgba(255, 99, 71, 0.1);
 }
 
+/* ===== Menu Page ===== */
+.menu-page-wrapper .menu-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+.menu-page-wrapper .menu-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.menu-page-wrapper .menu-item {
+  width: 30%;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.menu-page-wrapper .menu-item:hover { transform: scale(1.05); }
+.menu-page-wrapper .menu-item.unavailable { opacity: 0.5; }
+.menu-page-wrapper .menu-item img { width: 100%; height: auto; border-radius: 8px; }
+.menu-page-wrapper .quantity-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+.menu-page-wrapper .quantity-control button {
+  padding: 8px 14px;
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.menu-page-wrapper .quantity-control input {
+  width: 50px;
+  padding: 8px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.menu-page-wrapper .order-summary {
+  max-width: 1200px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+.menu-page-wrapper .order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+.menu-page-wrapper #total-price {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: right;
+  padding: 10px 0;
+}
+.menu-page-wrapper #place-order-btn {
+  background-color: #27ae60;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  width: 100%;
+}
+.menu-page-wrapper #place-order-btn:hover { background-color: #2ecc71; }
+
+/* ===== Order Confirmation Page ===== */
+.order-confirm-wrapper .order-summary-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.order-confirm-wrapper .order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+.order-confirm-wrapper #total-price {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: right;
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+.order-confirm-wrapper .button-container { text-align: center; margin-top: 30px; }
+.order-confirm-wrapper #confirm-order-btn,
+.order-confirm-wrapper #cancel-order-btn {
+  padding: 12px 30px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  color: white;
+}
+.order-confirm-wrapper #confirm-order-btn { background: #28a745; }
+.order-confirm-wrapper #confirm-order-btn:hover { background: #218838; }
+.order-confirm-wrapper #cancel-order-btn { background: #dc3545; }
+.order-confirm-wrapper #cancel-order-btn:hover { background: #c82333; }
+
+/* ===== Order Success Page ===== */
+.order-success-wrapper .success-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.order-success-wrapper .success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 25px;
+}
+.order-success-wrapper .btn-primary,
+.order-success-wrapper .btn-secondary {
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.order-success-wrapper .btn-primary { background: #27ae60; color: white; }
+.order-success-wrapper .btn-secondary { background: #2980b9; color: white; }
+
+/* ===== Signup Page ===== */
+.signup-layout-wrapper { font-family: Arial, sans-serif; background-color: #f4f4f4; min-height: 100vh; }
+.signup-layout-wrapper header { background-color: #333; color: white; padding: 20px; text-align: center; }
+.signup-layout-wrapper .signup {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+.signup-layout-wrapper .signup input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.signup-layout-wrapper .signup button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.signup-layout-wrapper .signup button:hover { background-color: #ff4500; }
+.signup-layout-wrapper .error { color: red; font-size: 14px; }
+
+/* ===== Verify Page (shares same visual style as Signup) ===== */
+.verify-layout-wrapper { font-family: Arial, sans-serif; background-color: #f4f4f4; min-height: 100vh; }
+.verify-layout-wrapper header { background-color: #333; color: white; padding: 20px; text-align: center; }
+.verify-layout-wrapper .verify {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+.verify-layout-wrapper .verify input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.verify-layout-wrapper .verify button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.verify-layout-wrapper .error { color: red; font-size: 14px; }
+
+/* ===== About Page ===== */
+.about-layout-wrapper { background-color: #fff8e1; padding: 20px; }
+.about-layout-wrapper .about-us header { text-align: center; margin-bottom: 40px; background: none; }
+.about-layout-wrapper .about-us header h1 { font-size: 40px; color: #d35400; margin-bottom: 10px; }
+.about-layout-wrapper .about-us header p { font-size: 20px; color: #34495e; max-width: 80%; margin: 0 auto; }
+.about-layout-wrapper .content { max-width: 800px; margin: 0 auto; }
+.about-layout-wrapper .content section { margin-bottom: 40px; }
+.about-layout-wrapper .content h2 { font-size: 30px; color: #e67e22; margin-bottom: 20px; text-align: center; }
+.about-layout-wrapper .content p { font-size: 18px; color: #7f8c8d; line-height: 1.8; }
+.about-layout-wrapper .content ul { list-style: none; padding: 0; }
+.about-layout-wrapper .content ul li { font-size: 18px; color: #7f8c8d; margin-bottom: 10px; }
+.about-layout-wrapper .join-us { background-color: #ecf0f1; padding: 20px; border-radius: 8px; text-align: center; }
+.about-layout-wrapper .join-us h2 { color: #27ae60; }
+.about-layout-wrapper .join-us a { color: #2980b9; text-decoration: none; font-weight: bold; }
+.about-layout-wrapper .join-us a:hover { text-decoration: underline; }
+
+/* ===== Receipt Upload Page ===== */
+.receipt-upload-wrapper {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  min-height: 100vh;
+}
+.receipt-upload-wrapper header { text-align: center; padding: 2rem 1rem 1rem 1rem; background: #fff8f0; }
+.receipt-upload-wrapper header h1 { color: #ff7e5f; font-size: 2.2rem; margin-bottom: 0.5rem; }
+.receipt-upload-wrapper .subtitle { color: #555; font-size: 1.1rem; }
+.receipt-upload-wrapper .upload-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+.receipt-upload-wrapper .upload-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(252, 182, 159, 0.15);
+  padding: 2rem 2.5rem;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+.receipt-upload-wrapper form label {
+  display: block;
+  margin-bottom: 0.7rem;
+  color: #ff7e5f;
+  font-weight: 500;
+}
+.receipt-upload-wrapper input[type="file"] {
+  margin-bottom: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #fcb69f;
+  background: #fff8f0;
+  width: 100%;
+}
+.receipt-upload-wrapper .upload-btn {
+  background: linear-gradient(90deg, #ff7e5f 0%, #feb47b 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.receipt-upload-wrapper #uploadStatus { margin-top: 1rem; font-weight: 500; }
+.receipt-upload-wrapper .success { color: #27ae60; }
+.receipt-upload-wrapper .error { color: #c0392b; }
+
+
